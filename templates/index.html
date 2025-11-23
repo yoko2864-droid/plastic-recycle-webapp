@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>塑膠回收查詢</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="top">
+      <h1>塑膠回收查詢</h1>
+      <p class="lead">快速搜尋常見物品的回收建議</p>
+      <div class="controls">
+        <input id="searchInput" placeholder="搜尋物品（例如：寶特瓶）">
+        <button id="addBtn">新增</button>
+      </div>
+      <div class="filters">
+        <select id="filter-材質"><option value="">全部材質</option></select>
+        <select id="filter-回收標示"><option value="">全部回收標示</option></select>
+        <select id="filter-可回收性"><option value="">全部可回收性</option></select>
+        <button id="filterClear" class="ghost">清除</button>
+      </div>
+    </header>
+
+    <section id="cards" class="cards"></section>
+    <footer class="footer">後台（管理員）：<a href="/admin?key=letmein">/admin?key=letmein</a>（請改key）</footer>
+  </main>
+
+<script>
+async function loadFilters(){
+  const res = await fetch('/api/filters');
+  const f = await res.json();
+  const fill = (id, arr, label)=>{
+    const sel = document.getElementById(id);
+    sel.innerHTML = `<option value="">${label}</option>`;
+    arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); });
+  };
+  fill('filter-材質', f['材質'] || [], '全部材質');
+  fill('filter-回收標示', f['回收標示'] || [], '全部回收標示');
+  fill('filter-可回收性', f['可回收性'] || [], '全部可回收性');
+}
+
+async function fetchAndRender(q='', filters={}){
+  const params = new URLSearchParams();
+  if(q) params.set('q', q);
+  for(const k in filters) if(filters[k]) params.set(k, filters[k]);
+  const res = await fetch('/api/search?' + params.toString());
+  const data = await res.json();
+  const cards = document.getElementById('cards'); cards.innerHTML='';
+  if(data.length===0){ cards.innerHTML='<p class="empty">找不到項目。試試其他關鍵字或清除篩選。</p>'; return; }
+  data.forEach(item=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML = `<h3>${item['物品']}</h3>
+      <p><strong>材質：</strong>${item['材質'] || ''}</p>
+      <p><strong>回收標示：</strong>${item['回收標示'] || ''}</p>
+      <p><strong>建議：</strong>${item['建議'] || ''}</p>
+      <p class="notes"><strong>備註：</strong>${item['備註'] || ''}</p>`;
+    cards.appendChild(div);
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', ()=> applyFilters());
+document.getElementById('addBtn').addEventListener('click', ()=> window.location.href='/add');
+
+function applyFilters(){
+  const q = document.getElementById('searchInput').value.trim();
+  const filters = {
+    '材質': document.getElementById('filter-材質').value,
+    '回收標示': document.getElementById('filter-回收標示').value,
+    '可回收性': document.getElementById('filter-可回收性').value
+  };
+  fetchAndRender(q, filters);
+}
+
+document.getElementById('filter-材質').addEventListener('change', applyFilters);
+document.getElementById('filter-回收標示').addEventListener('change', applyFilters);
+document.getElementById('filter-可回收性').addEventListener('change', applyFilters);
+document.getElementById('filterClear').addEventListener('click', ()=>{
+  document.getElementById('searchInput').value='';
+  document.getElementById('filter-材質').value='';
+  document.getElementById('filter-回收標示').value='';
+  document.getElementById('filter-可回收性').value='';
+  fetchAndRender();
+});
+
+window.addEventListener('load', async ()=>{
+  await loadFilters();
+  fetchAndRender();
+});
+</script>
+</body>
+</html>

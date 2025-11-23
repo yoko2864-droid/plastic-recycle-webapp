@@ -1,0 +1,64 @@
+body {
+    font-family: "Microsoft JhengHei", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f6f7fb;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+}
+
+.item {
+    background: #ffffff;
+    padding: 15px;
+    border: 1px solid #e3e3e3;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+.item:hover {
+    background: #fafafa;
+}
+
+.label {
+    font-weight: bold;
+    color: #555;
+}
+
+.value {
+    margin-left: 5px;
+    color: #222;
+}
+
+.admin-only {
+    display: none; /* 🔥 一般使用者看不到 admin 功能 */
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 8px;
+    border-radius: 6px;
+}

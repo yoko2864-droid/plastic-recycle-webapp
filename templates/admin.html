@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>管理後台</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<main class="container"><h1>後台管理（需帶 key）</h1><div id="adminList"></div><a class="btn" href="/add">新增項目</a></main>
+<script>
+async function loadItems(){
+  const url = new URL(window.location.href); const key = url.searchParams.get('key')||'';
+  const res = await fetch('/api/admin/items?key=' + encodeURIComponent(key));
+  if(res.status===403){ document.getElementById('adminList').innerText='無權限（key 不正確）'; return; }
+  const items = await res.json(); const c=document.getElementById('adminList'); c.innerHTML='';
+  items.forEach(it=>{
+    const d=document.createElement('div');
+    d.className='card';
+    d.innerHTML=`
+      <h3>${it.物品} (id:${it.id})</h3>
+      <p><strong>材質：</strong>${it.材質}</p>
+      <p><strong>回收標示：</strong>${it.回收標示}</p>
+      <p><strong>建議：</strong>${it.建議}</p>
+      <div style="margin-top:8px;">
+        <a class="btn" href="/edit/${it.id}?key=${encodeURIComponent(key)}">編輯</a>
+        <form method="POST" action="/delete/${it.id}?key=${encodeURIComponent(key)}"
+              style="display:inline" onsubmit="return confirm('確定刪除？');">
+          <button class="btn danger" type="submit">刪除</button>
+        </form>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+window.addEventListener('load', loadItems);
+</script></body></html>

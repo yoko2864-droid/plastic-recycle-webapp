@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>編輯物品</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<main class="container form-page"><h2>編輯物品</h2><form method="POST">
+<label>物品<input name="物品" required value="{{ item['物品'] }}"></label>
+<label>材質<input name="材質" value="{{ item['材質'] }}"></label>
+<label>回收標示<input name="回收標示" value="{{ item['回收標示'] }}"></label>
+<label>建議<textarea name="建議">{{ item['建議'] }}</textarea></label>
+<label>丟棄方式<input name="丟棄方式" value="{{ item['丟棄方式'] }}"></label>
+<label>可回收性<input name="可回收性" value="{{ item['可回收性'] }}"></label>
+<label>替代建議<input name="替代建議" value="{{ item['替代建議'] }}"></label>
+<label>備註<textarea name="備註">{{ item['備註'] }}</textarea></label>
+<div class="form-actions"><button type="submit" class="btn">存檔</button><a class="btn" href="/admin?key=letmein">取消</a></div></form></main>
+</body></html>
