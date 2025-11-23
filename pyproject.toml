@@ -3,12 +3,16 @@ name = "plastic-recycle-webapp"
 version = "0.1.0"
 description = "Plastic Recycling Classification Helper"
 authors = ["yoko2864-droid <yoko2864@example.com>"]
+packages = []  # <-- 空陣列，表示不要當作 Python package 安裝
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.10"
 flask = "3.1.2"
 gunicorn = "21.2.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.settings]
+package-mode = false   # <-- 告訴 Poetry 只安裝依賴，不安裝專案
